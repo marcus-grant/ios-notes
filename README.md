@@ -55,7 +55,80 @@ extension NotesViewController: UITableViewDataSource {
 - From the Apple Swift Docs on [access controls][SwiftDocs:ACL]
 > Marking a class as open explicitly indicates that you’ve considered the impact of code from other modules using that class as a superclass, and that you’ve designed your class’s code accordingly.
 
+## Classes & Custom Types
+From Apple [SwiftDocs][SwiftDocs:ACL]:
+> Access levels in Swift follow an overall guiding principle: No entity can be defined in terms of another entity that has a lower (more restrictive) access level.
 
+> For example:
+
+> A public variable cannot be defined as having an internal, file-private, or private type, because the type might not be available everywhere that the public variable is used.
+> A function cannot have a higher access level than its parameter types and return type, because the function could be used in situations where its constituent types are not available to the surrounding code.
+> The specific implications of this guiding principle for different aspects of the language are covered in detail below.
+
+- For example, a public class, can only have members that are public or more exclusive entities
+- `internal` classes can have only `internal`, `file-private` and `private` entities
+
+From [SwiftDocs][SwiftDocs:ACL]:
+```swift
+public class SomePublicClass {                  // explicitly public class
+    public var somePublicProperty = 0            // explicitly public class member
+    var someInternalProperty = 0                 // implicitly internal class member
+    fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
+    private func somePrivateMethod() {}          // explicitly private class member
+}
+ 
+ class SomeInternalClass {                       // implicitly internal class
+    var someInternalProperty = 0                 // implicitly internal class member
+    fileprivate func someFilePrivateMethod() {}  // explicitly file-private class member
+    private func somePrivateMethod() {}          // explicitly private class member
+ }
+  
+  fileprivate class SomeFilePrivateClass {        // explicitly file-private class
+    func someFilePrivateMethod() {}              // implicitly file-private class member
+    private func somePrivateMethod() {}          // explicitly private class member
+  }
+   
+   private class SomePrivateClass {                // explicitly private class
+       func somePrivateMethod() {}                  // implicitly private class member
+   }
+```
+
+## Functions
+- The **implied access level** of a function is implied semantically based off the **most restrictive access level of all parameters and returns**
+- If an **implied access level** of a function is **too restrictive**, explicitly **state its access level** with a prefix of the access keywords
+- You **must** explicitly **define access level of a function** if **most restrictive parameter or return is more restrictive than function declaration**
+
+## Tuples
+- Implied to **have access of most restrictive component**
+- Can't be explicity given any access level besides what is implied by its components
+
+## Enums
+- Can't specify different access level to individual enum cases
+- All enum cases have same access as enum definition 
+- Raw & Associated values must have the same access as the enum they get used in
+
+## Subclasses
+- Cannot have less restrictive access than its superclass
+- Overriding & Subclassing is allowed depending on the class that is being attempted to subclass or override
+    - i.e. you can't subclass a `private-file` class outside that class's source file, but you can within it
+
+## Variables, Constants, Properties, Subscripts
+- Cannot be more less restrictive than its containing type/class
+    - Makes sense, because you're violating a class/type's access level if its properties are less restrictive
+- If a variable, property, constant, or subscript is assigned based on a type, that type needs to be exactly as restrictive
+--  **WAIT WHAT?!** from [Swift Docs][SwiftDocs:ACL]:
+> if a constant, variable, property, or subscript makes use of a private type, the constant, variable, property, or subscript must also be marked as private:
+`private var privateInstance = somePrivateClass()` why have a keyword explicitly specify the access if it must have the same kind as the assigning type?
+
+## Getters/Setters
+- Implied to have the same access as the type/class that of the constant/property/subscript/variable it belongs to
+- Can explicitly specify a higher restriction than its associated type/class
+- get & set can have different, but again, lower than their types restrictions
+
+
+### Default Access
+- Most entities get `internal` level access as they are defined
+- 
 
 
 # References

@@ -131,6 +131,19 @@ public class SomePublicClass {                  // explicitly public class
 - 
 
 
+# Miscelaneous
+
+## Discardable Results in Swift 3
+- Before swift 3, functions didn't necessarily need to return a function and not even a warning would show if called a returnable function without assigning it to something.
+- Before swift 3, if you wanted a warning when this happens you had to prepend `@warn_unused_result`
+- In Swift 3+, this paradigm was flipped
+- Now a function that disregards the return gives a warning
+- Quiet this warning with a prepended `@discardableResult` before the function definition
+[From @patrickbdev on medium][DiscardableResult]
+> This behaviour has been flipped around in Swift 3 where now any unused returned results generate a warning. If you’re designing an API and certain function return values should more so be treated as side effects you can annotate the function with @discardableResult
+
+
 # References
 [SwiftDocs:ACL]: https://developer.apple.com/library/content/documentation/Swift/Conceptual/Swift_Programming_Language/AccessControl.html "Swift-Docs: Access Control"
 [Cocoacast:private-fileprivate]: https://cocoacasts.com/what-is-the-difference-between-private-and-fileprivate-in-swift-3/ "Cocoacasts: Difference between private & file-private"
+[DiscardableResult]: http://bit.ly/2qJW73R "Swift 3: Discardable Result on Medium"
